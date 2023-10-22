@@ -3,15 +3,8 @@ import numpy.linalg as la
 import copy
 import sympy as sp
 
-A1 = np.array([[1e-16, 1., -1.], [-1., 2., -1.], [2., -1., 0.]])
-b1 = np.array([0., 0., 1.])
-
-A2 = np.array([[2., -1., 0.], [-1., 2., -1.], [1e-16, 1., -1.]])
-b2 = np.array([1., 0., 0.])
-
 # Starter pack function;
 def gauss(A_in, b_in):
-
 
     A = copy.deepcopy(A_in)
     b = copy.deepcopy(b_in)
@@ -78,11 +71,18 @@ def GetSolve(A_in, b_in, L_in, U_in):
 
 # Main function;
 def main():
-    L, U = LUInitializer(A2)
-    solve = GetSolve(A2, b2, L, U)
 
-    print(f" MATRIX L:\n {L}\n\n")
-    print(f" MATRIX U:\n {U}\n\n")
-    print(f" SOLVE AS A RESULT LU:\n {solve}\n\n")
+    A = np.array([[1., 1., 1.], [0., 1., 2.], [7., 1., 4.]])
+    b = np.array(UnitMatrixCreator(A.shape[0]))
+
+    L, U = LUInitializer(A)
+    solve = GetSolve(A, b, L, U)
+    BackA = np.zeros_like(A)
+    for i in range(A.shape[0]):
+        BackA[:, i] = gauss(U, gauss(L,
+                            np.array(UnitMatrixCreator(A.shape[0]))[:, i]))
+
+    print(f"numpy.linalg.inv:\n{np.linalg.inv(A)}\n\n")
+    print(f"(LU)^(-1):\n{BackA}")
 
 main()
